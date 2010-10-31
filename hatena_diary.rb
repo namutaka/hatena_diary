@@ -37,7 +37,7 @@ module HatenaDiary
     end
 
     def update(entry)
-      @client.update_entry( entry.entry.edit_link, entry )
+      @client.update_entry( entry.entry.edit_link, entry.entry )
     end
 
     def delete(entry)
