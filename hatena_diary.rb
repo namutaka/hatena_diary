@@ -29,7 +29,7 @@ module HatenaDiary
 
     def list(is_public = true)
       @client.get_feed(collection_uri(is_public)).
-          entries.map { |e| new Entry.new e }
+          entries.map { |e| Entry.new e }
     end
 
     def create(entry, is_public = true)
@@ -75,6 +75,7 @@ module HatenaDiary
 
         e.title = lines.shift
         e.edit_link = lines.shift
+        lines.shift
         e.content = lines.join
       end
     end
@@ -96,6 +97,7 @@ module HatenaDiary
       open(file_path, 'w') do |f|
         f.puts(@entry.title || "")
         f.puts(@entry.edit_link)
+        f.puts('')
         f.write(@entry.content.body)
       end
     end

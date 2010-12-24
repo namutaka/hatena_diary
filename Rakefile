@@ -7,9 +7,18 @@ client = nil
 task :default => :environment
 
 task :environment do
+  require "highline"
+
   hatena_id = ENV['ID']
   passwd = ENV['PW']
-  raise "Invalid Argument" unless hatena_id
+
+  if hatena_id.nil? or hatena_id.empty?
+    hatena_id = HighLine.new.ask('ID: ')
+  end
+
+  if passwd.nil? or passwd.empty?
+    passwd = HighLine.new.ask('Password: ') {|q| q.echo = '*' }
+  end
 
   client = HatenaDiary::Client.new hatena_id, passwd
 end
