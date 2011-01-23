@@ -67,11 +67,10 @@ module HatenaDiary
     end
 
     def self.load(file_path)
-      id = File.basename(file_path, '.*')
       lines = IO.readlines(file_path)
 
       self.new do |e|
-        e.id = id
+        e.id = lines.shift
 
         e.title = lines.shift
         e.edit_link = lines.shift
@@ -80,6 +79,11 @@ module HatenaDiary
       end
     end
 
+    def self.entry_files
+      Dir["entry_*.txt"].each do |f|
+        yield f
+      end
+    end
 
     attr_accessor :entry
 
@@ -92,15 +96,24 @@ module HatenaDiary
     end
 
     def save(path = nil)
-      file_path = @entry.id + ".txt"
+      id = parse_id(@entry.id)
+      file_path = "entry_#{id[:entry_id]}.txt"
       file_path = File.join(path, file_path) if path
       open(file_path, 'w') do |f|
+        f.puts(@entry.id)
         f.puts(@entry.title || "")
         f.puts(@entry.edit_link)
         f.puts('')
         f.write(@entry.content.body)
       end
     end
+
+    private
+      def parse_id(id)
+        match = /tag:d.hatena.ne.jp,\d+:diary-([^-]+)-([^-]+)-(.+)/.match(id)
+        raise "Invalid Id format: id=#{id}" if match.nil?
+        {:hatena_id => match[1], :date => match[2], :entry_id => match[3]}
+      end
   end
 end
 
