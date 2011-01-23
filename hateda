@@ -4,7 +4,10 @@ hatenarc=~/.hatenarc
 base_path=`dirname $0`
 command=$1
 
-cat $hatenarc | while read id pass; do break; done
+cat $hatenarc | while read id pass; do
+  rake -f ${base_path}/Rakefile "$command" ID=$id PW=$pass
 
-rake -f ${base_path}/Rakefile "$command" ID=$id PW=$pass
+  break;
+done
+
 

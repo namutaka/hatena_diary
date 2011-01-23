@@ -70,8 +70,6 @@ module HatenaDiary
       lines = IO.readlines(file_path)
 
       self.new do |e|
-        e.id = lines.shift
-
         e.title = lines.shift
         e.edit_link = lines.shift
         lines.shift
@@ -100,7 +98,6 @@ module HatenaDiary
       file_path = "entry_#{id[:entry_id]}.txt"
       file_path = File.join(path, file_path) if path
       open(file_path, 'w') do |f|
-        f.puts(@entry.id)
         f.puts(@entry.title || "")
         f.puts(@entry.edit_link)
         f.puts('')
