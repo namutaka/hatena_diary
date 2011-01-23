@@ -31,7 +31,7 @@ namespace :draft do
   end
 
   task :push => :environment do
-    Dir["tag:*.txt"].each do |f|
+    HatenaDiary::Entry.entry_files do |f|
       entry = HatenaDiary::Entry.load(f)
       client.update(entry)
     end
