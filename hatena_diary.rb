@@ -60,26 +60,32 @@ module HatenaDiary
 
 
   class Entry
-    def self.new(params = nil)
-      obj = super(params)
-      yield(obj.entry) if block_given?
-      obj
-    end
-
-    def self.load(file_path)
-      lines = IO.readlines(file_path)
-
-      self.new do |e|
-        e.title = lines.shift
-        e.edit_link = lines.shift
-        lines.shift
-        e.content = lines.join
+    class << self
+      def new(params = nil)
+        obj = super(params)
+        yield(obj.entry) if block_given?
+        obj
       end
-    end
 
-    def self.entry_files
-      Dir["entry_*.txt"].each do |f|
-        yield f
+      def load(file_path)
+        lines = IO.readlines(file_path)
+
+        self.new do |e|
+          e.title = lines.shift
+          e.edit_link = lines.shift
+          lines.shift
+          e.content = lines.join
+        end
+      end
+
+      def delete(file_path)
+        File.delete(file_path)
+      end
+
+      def entry_files
+        Dir["entry_*.txt"].each do |f|
+          yield f
+        end
       end
     end
 

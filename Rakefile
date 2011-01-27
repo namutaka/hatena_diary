@@ -24,7 +24,13 @@ task :environment do
 end
 
 namespace :draft do
-  task :pull => :environment do
+  task :delete => :environment do
+    HatenaDiary::Entry.entry_files do |f|
+      HatenaDiary::Entry.delete(f)
+    end
+  end
+
+  task :pull => :delete do
     client.list(false).each do |e|
       e.save
     end
